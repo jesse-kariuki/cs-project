@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- ============================================================ -->
+    <!-- 1. customer.credit_limit                                      -->
+    <!-- ============================================================ -->
+    <changeSet id="20260701-01-add-credit-limit-to-customer" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="customer" columnName="credit_limit"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="customer">
+            <column name="credit_limit" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- 2. sale.amount_paid                                           -->
+    <!-- ============================================================ -->
+    <changeSet id="20260701-02-add-amount-paid-to-sale" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="sale" columnName="amount_paid"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="sale">
+            <column name="amount_paid" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- 3. credit_allocation table                                    -->
+    <!-- ============================================================ -->
+    <changeSet id="20260701-03-create-credit-allocation-table" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="credit_allocation"/>
+            </not>
+        </preConditions>
+        <createTable tableName="credit_allocation">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="payment_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sale_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount_applied" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="allocated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20260701-04-fk-credit-allocation-payment" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="credit_allocation" foreignKeyName="fk_credit_allocation_payment"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint
+                baseTableName="credit_allocation"
+                baseColumnNames="payment_id"
+                constraintName="fk_credit_allocation_payment"
+                referencedTableName="customer_payment"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="20260701-05-fk-credit-allocation-sale" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyTableName="credit_allocation" foreignKeyName="fk_credit_allocation_sale"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint
+                baseTableName="credit_allocation"
+                baseColumnNames="sale_id"
+                constraintName="fk_credit_allocation_sale"
+                referencedTableName="sale"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="20260701-06-index-credit-allocation-sale" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="credit_allocation" indexName="idx_credit_allocation_sale_id"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="credit_allocation" indexName="idx_credit_allocation_sale_id">
+            <column name="sale_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20260701-07-index-credit-allocation-payment" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="credit_allocation" indexName="idx_credit_allocation_payment_id"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="credit_allocation" indexName="idx_credit_allocation_payment_id">
+            <column name="payment_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ============================================================ -->
+    <!-- 4. Seed the "Credit" payment method                           -->
+    <!-- ============================================================ -->
+    <changeSet id="20260701-08-seed-credit-payment-method" author="pos-team">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM payment_method WHERE LOWER(name) = 'credit'
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="payment_method">
+            <column name="name" value="Credit"/>
+            <column name="category" value="Credit"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

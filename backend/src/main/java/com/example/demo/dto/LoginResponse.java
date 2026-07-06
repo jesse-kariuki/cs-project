@@ -5,18 +5,17 @@ package com.example.demo.dto;
  */
 public class LoginResponse {
     private String accessToken;
-    private String refreshToken;
     private UserDto user;
 
     public LoginResponse() {}
 
-    public LoginResponse(String accessToken, String refreshToken, UserDto user) {
+
+
+    public LoginResponse(String accessToken, UserDto user){
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
         this.user = user;
     }
 
-    // Getters and Setters
     public String getAccessToken() {
         return accessToken;
     }
@@ -25,13 +24,7 @@ public class LoginResponse {
         this.accessToken = accessToken;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
-    }
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
 
     public UserDto getUser() {
         return user;

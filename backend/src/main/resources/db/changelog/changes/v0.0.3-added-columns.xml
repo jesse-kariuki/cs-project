@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- MAIN CHANGESET: Add M-Pesa fields -->
+    <changeSet id="add-mpesa-fields-to-sale" author="developer">
+        <comment>Add M-Pesa tracking fields to sale table for STK push payment tracking</comment>
+
+        <!-- Add columns -->
+        <addColumn tableName="sale">
+            <column name="mpesa_checkout_request_id" type="VARCHAR(100)"/>
+        </addColumn>
+
+        <addColumn tableName="sale">
+            <column name="mpesa_receipt_number" type="VARCHAR(100)"/>
+        </addColumn>
+
+        <addColumn tableName="sale">
+            <column name="mpesa_initiated_at" type="TIMESTAMP"/>
+        </addColumn>
+
+        <addColumn tableName="sale">
+            <column name="mpesa_completed_at" type="TIMESTAMP"/>
+        </addColumn>
+
+        <addColumn tableName="sale">
+            <column name="mpesa_phone" type="VARCHAR(20)"/>
+        </addColumn>
+
+        <!-- Add indexes -->
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_checkout_request_id">
+            <column name="mpesa_checkout_request_id"/>
+        </createIndex>
+
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_receipt_number">
+            <column name="mpesa_receipt_number"/>
+        </createIndex>
+
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_phone">
+            <column name="mpesa_phone"/>
+        </createIndex>
+
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_payment_tracking">
+            <column name="mpesa_checkout_request_id"/>
+            <column name="status"/>
+            <column name="mpesa_completed_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

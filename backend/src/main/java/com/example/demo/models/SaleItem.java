@@ -2,9 +2,17 @@ package com.example.demo.models;
 
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "sale_item")
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SaleItem {
 
     @Id

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- ChangeSet: Add M-Pesa tracking fields to sale table -->
+    <changeSet id="add-mpesa-fields-to-sale" author="developer">
+        <comment>Add M-Pesa tracking fields to sale table for STK push payment tracking</comment>
+
+        <!-- 1. Add mpesa_checkout_request_id column -->
+        <addColumn tableName="sale">
+            <column name="mpesa_checkout_request_id" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <comment>Added mpesa_checkout_request_id column - Safaricom's unique identifier for STK push request</comment>
+
+        <!-- 2. Add mpesa_receipt_number column -->
+        <addColumn tableName="sale">
+            <column name="mpesa_receipt_number" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <comment>Added mpesa_receipt_number column - Safaricom's receipt number when payment succeeds</comment>
+
+        <!-- 3. Add mpesa_initiated_at column -->
+        <addColumn tableName="sale">
+            <column name="mpesa_initiated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <comment>Added mpesa_initiated_at column - Timestamp when M-Pesa payment was initiated</comment>
+
+        <!-- 4. Add mpesa_completed_at column -->
+        <addColumn tableName="sale">
+            <column name="mpesa_completed_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <comment>Added mpesa_completed_at column - Timestamp when M-Pesa callback was received</comment>
+
+        <!-- 5. Add mpesa_phone column -->
+        <addColumn tableName="sale">
+            <column name="mpesa_phone" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <comment>Added mpesa_phone column - Customer's phone number used for M-Pesa payment</comment>
+
+        <!-- 6. Create index on mpesa_checkout_request_id for faster callback lookups -->
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_checkout_request_id">
+            <column name="mpesa_checkout_request_id"/>
+        </createIndex>
+        <comment>Created index on mpesa_checkout_request_id for faster callback lookups</comment>
+
+        <!-- 7. Create index on mpesa_receipt_number for faster lookups -->
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_receipt_number">
+            <column name="mpesa_receipt_number"/>
+        </createIndex>
+        <comment>Created index on mpesa_receipt_number for faster lookups</comment>
+
+        <!-- 8. Create index on mpesa_phone for customer payment history queries -->
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_phone">
+            <column name="mpesa_phone"/>
+        </createIndex>
+        <comment>Created index on mpesa_phone for customer payment history queries</comment>
+
+        <!-- 9. Create composite index for payment tracking queries -->
+        <createIndex tableName="sale" indexName="idx_sale_mpesa_payment_tracking">
+            <column name="mpesa_checkout_request_id"/>
+            <column name="status"/>
+            <column name="mpesa_completed_at"/>
+        </createIndex>
+        <comment>Created composite index for payment tracking queries</comment>
+
+    </changeSet>
+
+    <!-- Rollback ChangeSet: Remove M-Pesa tracking fields -->
+    <changeSet id="add-mpesa-fields-to-sale-rollback" author="developer">
+        <comment>Rollback: Remove M-Pesa tracking fields from sale table</comment>
+
+        <!-- Drop composite index -->
+        <dropIndex tableName="sale" indexName="idx_sale_mpesa_payment_tracking"/>
+        <comment>Dropped idx_sale_mpesa_payment_tracking index</comment>
+
+        <!-- Drop index on mpesa_phone -->
+        <dropIndex tableName="sale" indexName="idx_sale_mpesa_phone"/>
+        <comment>Dropped idx_sale_mpesa_phone index</comment>
+
+        <!-- Drop index on mpesa_receipt_number -->
+        <dropIndex tableName="sale" indexName="idx_sale_mpesa_receipt_number"/>
+        <comment>Dropped idx_sale_mpesa_receipt_number index</comment>
+
+        <!-- Drop index on mpesa_checkout_request_id -->
+        <dropIndex tableName="sale" indexName="idx_sale_mpesa_checkout_request_id"/>
+        <comment>Dropped idx_sale_mpesa_checkout_request_id index</comment>
+
+        <!-- Drop mpesa_phone column -->
+        <dropColumn tableName="sale" columnName="mpesa_phone"/>
+        <comment>Dropped mpesa_phone column</comment>
+
+        <!-- Drop mpesa_completed_at column -->
+        <dropColumn tableName="sale" columnName="mpesa_completed_at"/>
+        <comment>Dropped mpesa_completed_at column</comment>
+
+        <!-- Drop mpesa_initiated_at column -->
+        <dropColumn tableName="sale" columnName="mpesa_initiated_at"/>
+        <comment>Dropped mpesa_initiated_at column</comment>
+
+        <!-- Drop mpesa_receipt_number column -->
+        <dropColumn tableName="sale" columnName="mpesa_receipt_number"/>
+        <comment>Dropped mpesa_receipt_number column</comment>
+
+        <!-- Drop mpesa_checkout_request_id column -->
+        <dropColumn tableName="sale" columnName="mpesa_checkout_request_id"/>
+        <comment>Dropped mpesa_checkout_request_id column</comment>
+
+    </changeSet>
+
+</databaseChangeLog>

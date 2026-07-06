@@ -17,9 +17,7 @@ import jakarta.persistence.Table;
  * User entity representing application users.
  */
 @Entity
-@Table(name = "users", indexes = {
-    @Index(name = "idx_username", columnList = "username", unique = true)
-})
+@Table(name = "users")
 public class User {
 
     @Id

@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/payments")
 public class PaymentMethodController {
 
     @Autowired
     private PaymentMethodService paymentMethodService;
 
-    // GET: /api/payments
     @GetMapping
     public ResponseEntity<List<PaymentMethod>> getAllPayments() {
         return ResponseEntity.ok(paymentMethodService.getAllPaymentMethods());
@@ -38,7 +37,6 @@ public class PaymentMethodController {
         }
     }
 
-    // PUT: /api/payments/1/toggle?status=false
     @PutMapping("/{id}/toggle")
     public ResponseEntity<?> togglePaymentStatus(@PathVariable Integer id, @RequestParam boolean status) {
         try {

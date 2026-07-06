@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+
+    <!-- ==================== TABLES ==================== -->
+
+    <!-- company -->
+    <changeSet id="1" author="system">
+        <createTable tableName="company">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(30)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone" type="varchar(15)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="company"/>
+        </rollback>
+    </changeSet>
+
+    <!-- customer -->
+    <changeSet id="2" author="system">
+        <createTable tableName="customer">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone" type="varchar(15)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="customer"/>
+        </rollback>
+    </changeSet>
+
+    <!-- payment_method -->
+    <changeSet id="3" author="system">
+        <createTable tableName="payment_method">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="category" type="varchar(255)"/>
+            <column name="is_active" type="boolean" defaultValueBoolean="true"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="payment_method"/>
+        </rollback>
+    </changeSet>
+
+    <!-- store -->
+    <changeSet id="4" author="system">
+        <createTable tableName="store">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="location" type="varchar(20)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="store"/>
+        </rollback>
+    </changeSet>
+
+    <!-- users -->
+    <changeSet id="5" author="system">
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime"/>
+            <column name="last_login" type="datetime"/>
+            <column name="is_active" type="boolean" defaultValueBoolean="true"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="users"/>
+        </rollback>
+    </changeSet>
+
+    <!-- item -->
+    <changeSet id="6" author="system">
+        <createTable tableName="item">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="part_name" type="varchar(255)"/>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="part_number" type="varchar(30)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="brand" type="varchar(20)"/>
+            <column name="type" type="varchar(20)"/>
+            <column name="buying_price" type="double"/>
+            <column name="selling_price" type="double"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="item"/>
+        </rollback>
+    </changeSet>
+
+    <!-- inventory (depends on store & item) -->
+    <changeSet id="7" author="system">
+        <createTable tableName="inventory">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="store_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="inventory"/>
+        </rollback>
+    </changeSet>
+
+    <!-- company_payment (depends on company & payment_method) -->
+    <changeSet id="8" author="system">
+        <createTable tableName="company_payment">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="company_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_method_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_date" type="datetime"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="company_payment"/>
+        </rollback>
+    </changeSet>
+
+    <!-- customer_payment (depends on customer & payment_method) -->
+    <changeSet id="9" author="system">
+        <createTable tableName="customer_payment">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="customer_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_method_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_date" type="datetime"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="customer_payment"/>
+        </rollback>
+    </changeSet>
+
+    <!-- sale (depends on store, customer, payment_method) -->
+    <changeSet id="10" author="system">
+        <createTable tableName="sale">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="store_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="int"/>
+            <column name="payment_method_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_amount" type="double"/>
+            <column name="sale_date" type="datetime"/>
+            <column name="status" type="varchar(255)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="sale"/>
+        </rollback>
+    </changeSet>
+
+    <!-- sale_item (depends on sale & item) -->
+    <changeSet id="11" author="system">
+        <createTable tableName="sale_item">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sale_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int"/>
+            <column name="unit_price" type="double"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="sale_item"/>
+        </rollback>
+    </changeSet>
+
+    <!-- stock_addition (depends on company, store, item) -->
+    <changeSet id="12" author="system">
+        <createTable tableName="stock_addition">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="company_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_price" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_added" type="datetime"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="stock_addition"/>
+        </rollback>
+    </changeSet>
+
+    <!-- stock_transfer (depends on item, store (from/to)) -->
+    <changeSet id="13" author="system">
+        <createTable tableName="stock_transfer">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="item_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from_store_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="to_store_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transfer_date" type="datetime" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="stock_transfer"/>
+        </rollback>
+    </changeSet>
+
+    <!-- ==================== FOREIGN KEY CONSTRAINTS ==================== -->
+
+    <!-- inventory -->
+    <changeSet id="14" author="system">
+        <addForeignKeyConstraint
+                constraintName="fk_inventory_store"
+                baseTableName="inventory"
+                baseColumnNames="store_id"
+                referencedTableName="store"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_inventory_item"
+                baseTableName="inventory"
+                baseColumnNames="item_id"
+                referencedTableName="item"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <!-- company_payment -->
+    <changeSet id="15" author="system">
+        <addForeignKeyConstraint
+                constraintName="fk_company_payment_company"
+                baseTableName="company_payment"
+                baseColumnNames="company_id"
+                referencedTableName="company"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_company_payment_payment_method"
+                baseTableName="company_payment"
+                baseColumnNames="payment_method_id"
+                referencedTableName="payment_method"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <!-- customer_payment -->
+    <changeSet id="16" author="system">
+        <addForeignKeyConstraint
+                constraintName="fk_customer_payment_customer"
+                baseTableName="customer_payment"
+                baseColumnNames="customer_id"
+                referencedTableName="customer"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_customer_payment_payment_method"
+                baseTableName="customer_payment"
+                baseColumnNames="payment_method_id"
+                referencedTableName="payment_method"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <!-- sale -->
+    <changeSet id="17" author="system">
+        <addForeignKeyConstraint
+                constraintName="fk_sale_store"
+                baseTableName="sale"
+                baseColumnNames="store_id"
+                referencedTableName="store"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_sale_customer"
+                baseTableName="sale"
+                baseColumnNames="customer_id"
+                referencedTableName="customer"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_sale_payment_method"
+                baseTableName="sale"
+                baseColumnNames="payment_method_id"
+                referencedTableName="payment_method"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <!-- sale_item -->
+    <changeSet id="18" author="system">
+        <addForeignKeyConstraint
+                constraintName="fk_sale_item_sale"
+                baseTableName="sale_item"
+                baseColumnNames="sale_id"
+                referencedTableName="sale"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_sale_item_item"
+                baseTableName="sale_item"
+                baseColumnNames="item_id"
+                referencedTableName="item"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <!-- stock_addition -->
+    <changeSet id="19" author="system">
+        <addForeignKeyConstraint
+                constraintName="fk_stock_addition_company"
+                baseTableName="stock_addition"
+                baseColumnNames="company_id"
+                referencedTableName="company"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_stock_addition_store"
+                baseTableName="stock_addition"
+                baseColumnNames="store_id"
+                referencedTableName="store"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_stock_addition_item"
+                baseTableName="stock_addition"
+                baseColumnNames="item_id"
+                referencedTableName="item"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+    <!-- stock_transfer -->
+    <changeSet id="20" author="system">
+        <addForeignKeyConstraint
+                constraintName="fk_stock_transfer_item"
+                baseTableName="stock_transfer"
+                baseColumnNames="item_id"
+                referencedTableName="item"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_stock_transfer_from_store"
+                baseTableName="stock_transfer"
+                baseColumnNames="from_store_id"
+                referencedTableName="store"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+        <addForeignKeyConstraint
+                constraintName="fk_stock_transfer_to_store"
+                baseTableName="stock_transfer"
+                baseColumnNames="to_store_id"
+                referencedTableName="store"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"/>
+    </changeSet>
+
+</databaseChangeLog>

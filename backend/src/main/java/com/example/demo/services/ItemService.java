@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.models.Item;
+import com.example.demo.models.User;
 import com.example.demo.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,7 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public Item createItem(Item item) {
-        // Data sanitization: Standardize part numbers to uppercase for easy searching
+    public Item createItem(Item item, User user) {
         if (item.getPartNumber() != null) {
             item.setPartNumber(item.getPartNumber().toUpperCase().trim());
         } else {
@@ -35,5 +36,63 @@ public class ItemService {
         }
 
         return itemRepository.save(item);
+    }
+
+    public Item updateItem(Integer id, Item itemDetails) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Item not found with id: " + id
+                ));
+
+        // Update fields
+        if (itemDetails.getPartName() != null && !itemDetails.getPartName().isEmpty()) {
+            item.setPartName(itemDetails.getPartName());
+        }
+
+        if (itemDetails.getBrand() != null && !itemDetails.getBrand().isEmpty()) {
+            item.setBrand(itemDetails.getBrand());
+        }
+
+        if (itemDetails.getType() != null && !itemDetails.getType().isEmpty()) {
+            item.setType(itemDetails.getType());
+        }
+
+        return itemRepository.save(item);
+    }
+    public void deleteItem(Integer id) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Item not found with id: " + id
+                ));
+
+        // Optional: Check if item is in use
+        // if (inventoryRepository.existsByItem(item)) {
+        //     throw new IllegalArgumentException(
+        //         "Cannot delete item in use. Remove from inventory first."
+        //     );
+        // }
+
+        itemRepository.delete(item);
+    }
+
+    public List<Item> getItemsByType(String type) {
+        return itemRepository.findByTypeIgnoreCase(type);
+    }
+
+    /**
+     * Get items by brand.
+     */
+    public List<Item> getItemsByBrand(String brand) {
+        return itemRepository.findByBrandIgnoreCase(brand);
+    }
+
+
+    public List<Item> searchByKeyword(String keyword){
+
+        return itemRepository.searchByKeyword(keyword);
+    }
+
+    public long getItemCount() {
+        return itemRepository.count();
     }
 }

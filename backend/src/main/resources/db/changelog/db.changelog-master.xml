@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+
+    <include file="changes/v0.0.1-initial-migrations.xml" relativeToChangelogFile="true"/>
+    <include file="changes/v0.0.2-add-mpesa-fields.xml" relativeToChangelogFile="true"/>
+    <include file="changes/v0.0.3-added-columns.xml" relativeToChangelogFile="true"/>
+    <include file="db/changelog/changes/v0.0.4-added-columns-in-customer-and-entities.xml"/>
+</databaseChangeLog>

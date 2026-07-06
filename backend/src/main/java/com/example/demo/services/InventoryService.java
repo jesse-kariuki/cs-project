@@ -41,7 +41,6 @@ public class InventoryService {
         return inventoryRepository.findByStore(store);
     }
 
-    // Add or update stock levels (Receiving stock from a supplier)
     public Inventory addStock(Integer storeId, Integer itemId, Integer quantityToAdd) {
         if (quantityToAdd <= 0) {
             throw new IllegalArgumentException("Quantity to add must be greater than zero.");
@@ -52,17 +51,14 @@ public class InventoryService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found."));
 
-        // Check if the item is already tracked at this store; if not, initialize at 0
         Inventory inventory = inventoryRepository.findByStoreAndItem(store, item)
                 .orElse(new Inventory(store, item, 0));
 
-        // Add the new stock to the existing count
         inventory.setQuantity(inventory.getQuantity() + quantityToAdd);
 
         return inventoryRepository.save(inventory);
     }
 
-    // Move stock between branches safely
     @Transactional
     public StockTransfer transferStock(Integer fromStoreId, Integer toStoreId, Integer itemId, Integer quantityToTransfer) {
         if (fromStoreId.equals(toStoreId)) {
@@ -79,27 +75,22 @@ public class InventoryService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found in catalog."));
 
-        // 1. Verify Origin Stock Exists
         Inventory originInventory = inventoryRepository.findByStoreAndItem(fromStore, item)
                 .orElseThrow(() -> new IllegalArgumentException("Item not stocked at the origin store."));
 
-        // 2. Verify Origin has Enough Stock
         if (originInventory.getQuantity() < quantityToTransfer) {
             throw new IllegalArgumentException("Insufficient stock at origin store for this transfer.");
         }
 
-        // 3. Deduct from Origin
         originInventory.setQuantity(originInventory.getQuantity() - quantityToTransfer);
         inventoryRepository.save(originInventory);
 
-        // 4. Add to Destination (Creates new record if it's the first time storing this item there)
         Inventory destinationInventory = inventoryRepository.findByStoreAndItem(toStore, item)
                 .orElse(new Inventory(toStore, item, 0));
 
         destinationInventory.setQuantity(destinationInventory.getQuantity() + quantityToTransfer);
         inventoryRepository.save(destinationInventory);
 
-        // 5. Create and save the permanent audit trail
         StockTransfer transferLog = new StockTransfer(item, fromStore, toStore, quantityToTransfer);
         return stockTransferRepository.save(transferLog);
     }

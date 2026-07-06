@@ -10,13 +10,17 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Hibernate will automatically name this column 'name'
     @Column(unique = true, nullable = false, length = 50)
     private String name;
 
-    // Hibernate will automatically name this column 'phone'
     @Column(unique = true, nullable = false, length = 15)
     private String phone;
+
+    @Column(name = "credit_limit")
+    private Double creditLimit = 0.0;
+
+    public Double getCreditLimit() { return creditLimit; }
+    public void setCreditLimit(Double creditLimit) { this.creditLimit = creditLimit; }
 
     // Default Constructor required by JPA
     public Customer() {}

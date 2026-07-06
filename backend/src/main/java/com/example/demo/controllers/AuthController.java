@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import java.time.LocalDateTime;
 
 import com.example.demo.models.UserRole;
+import com.example.demo.services.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,20 +38,20 @@ import jakarta.validation.Valid;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     public AuthController(
-            AuthenticationManager authenticationManager,
             JwtService jwtService,
             UserRepository userRepository,
+            AuthService authService,
             PasswordEncoder passwordEncoder) {
-        this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authService = authService;
     }
 
 //    @PostMapping("/signup")
@@ -68,47 +69,59 @@ public class AuthController {
 //        return ResponseEntity.ok(new ApiResponse(true, newUser, "User registered successfully"));
 //    }
 
+
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<LoginResponse>> register(@RequestBody @Valid LoginRequest loginRequest) throws InvalidCredentialsException{
+
+        return ResponseEntity.ok(authService.signup(loginRequest));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest loginRequest) throws Exception{
+        return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
     /**
      * Login endpoint - authenticates user and returns tokens.
      */
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(
-            @Valid @RequestBody LoginRequest loginRequest,
-            HttpServletResponse response) {
-
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(),
-                    loginRequest.getPassword()
-                )
-            );
-
-            String accessToken = jwtService.generateAccessToken(authentication);
-            String refreshToken = jwtService.generateRefreshToken(authentication);
-
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            User user = userRepository.findById(Long.parseLong(userDetails.getId()))
-                .orElseThrow(() -> new InvalidCredentialsException("User not found"));
-            user.setLastLogin(LocalDateTime.now());
-            userRepository.save(user);
-
-            setCookie(response, "access_token", accessToken, 900); // 15 minutes
-            setCookie(response, "refresh_token", refreshToken, 604800); // 7 days
-
-            UserDto userDto = new UserDto(
-                user.getId(),
-                user.getUsername(),
-                user.getRole().name()
-            );
-
-            LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken, userDto);
-            return ResponseEntity.ok(new ApiResponse<>(true, loginResponse, "Login successful"));
-
-        } catch (Exception e) {
-            throw new InvalidCredentialsException("Invalid username or password");
-        }
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<ApiResponse<LoginResponse>> login(
+//            @Valid @RequestBody LoginRequest loginRequest,
+//            HttpServletResponse response) {
+//
+//        try {
+//            Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                    loginRequest.getUsername(),
+//                    loginRequest.getPassword()
+//                )
+//            );
+//
+//            String accessToken = jwtService.generateAccessToken(authentication);
+//            String refreshToken = jwtService.generateRefreshToken(authentication);
+//
+//            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//            User user = userRepository.findById(Long.parseLong(userDetails.getId()))
+//                .orElseThrow(() -> new InvalidCredentialsException("User not found"));
+//            user.setLastLogin(LocalDateTime.now());
+//            userRepository.save(user);
+//
+//            setCookie(response, "access_token", accessToken, 900); // 15 minutes
+//            setCookie(response, "refresh_token", refreshToken, 604800); // 7 days
+//
+//            UserDto userDto = new UserDto(
+//                user.getId(),
+//                user.getUsername(),
+//                user.getRole().name()
+//            );
+//
+//            LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken, userDto);
+//            return ResponseEntity.ok(new ApiResponse<>(true, loginResponse, "Login successful"));
+//
+//        } catch (Exception e) {
+//            throw new InvalidCredentialsException("Invalid username or password");
+//        }
+//    }
 
 
     @PostMapping("/refresh")

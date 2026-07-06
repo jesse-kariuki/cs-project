@@ -1,0 +1,186 @@
+{
+  "info": {
+    "name": "SWIFT-SALES Auto Repair POS",
+    "description": "Complete API test suite for the Auto Repair Garage Spring Boot backend.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Payment Setup",
+      "item": [
+        {
+          "name": "Create Payment Method",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"M-Pesa Paybill\",\n    \"category\": \"Mobile Money\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "payments" ]
+            }
+          }
+        },
+        {
+          "name": "Get All Payment Methods",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/payments",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "payments" ]
+            }
+          }
+        },
+        {
+          "name": "Get Active Payment Methods",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/active",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "payments", "active" ]
+            }
+          }
+        },
+        {
+          "name": "Toggle Payment Method Status",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/1/toggle?status=false",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "payments", "1", "toggle" ],
+              "query": [ { "key": "status", "value": "false" } ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Supplier Deliveries",
+      "item": [
+        {
+          "name": "Receive Stock from Supplier",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company\": {\"id\": 1},\n    \"store\": {\"id\": 1},\n    \"item\": {\"id\": 1},\n    \"quantity\": 50,\n    \"basePrice\": 1500.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/supplies/receive",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "supplies", "receive" ]
+            }
+          }
+        },
+        {
+          "name": "Get Supply History",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/supplies",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "supplies" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Checkout Engine",
+      "item": [
+        {
+          "name": "Process Sale (Checkout Cart)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"storeId\": 1,\n    \"paymentMethodId\": 1,\n    \"customerId\": 1,\n    \"cartItems\": [\n        {\n            \"itemId\": 1,\n            \"quantity\": 2,\n            \"unitPrice\": 4500.00\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sales/checkout",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "sales", "checkout" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Financial Ledger",
+      "item": [
+        {
+          "name": "Log Customer Payment (Incoming)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"customer\": {\"id\": 1},\n    \"paymentMethod\": {\"id\": 1},\n    \"amount\": 5000.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ledger/customer",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "ledger", "customer" ]
+            }
+          }
+        },
+        {
+          "name": "Log Supplier Payout (Outgoing)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company\": {\"id\": 1},\n    \"paymentMethod\": {\"id\": 2},\n    \"amount\": 25000.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ledger/company",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "ledger", "company" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Reports & Analytics",
+      "item": [
+        {
+          "name": "Get Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/dashboard",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "api", "reports", "dashboard" ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -35,20 +36,14 @@ import com.example.demo.security.JwtTokenFilter;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
     private final JwtTokenFilter jwtTokenFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     public SecurityConfig(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder,
             JwtTokenFilter jwtTokenFilter,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
             JwtAccessDeniedHandler jwtAccessDeniedHandler) {
-        this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
         this.jwtTokenFilter = jwtTokenFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
@@ -67,29 +62,24 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
 
-            // Set session creation policy to STATELESS
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // Configure CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-            // Configure authorization rules
-            .authorizeHttpRequests(authz -> authz
-                // Public endpoints (no authentication required)
+                .authorizeHttpRequests(authz -> authz
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                     .requestMatchers("/health/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/sale/mpesa/**").permitAll()
 
-                // Cashier endpoints (ROLE_CASHIER required)
                 .requestMatchers(HttpMethod.GET, "/invoices/**").hasRole("CASHIER")
                 .requestMatchers(HttpMethod.POST, "/invoices/**").hasRole("CASHIER")
                 .requestMatchers(HttpMethod.GET, "/inventory/search").hasRole("CASHIER")
                 .requestMatchers(HttpMethod.POST, "/payments/**").hasRole("CASHIER")
                 .requestMatchers(HttpMethod.GET, "/credit/**").hasRole("CASHIER")
 
-                // Admin endpoints (ROLE_ADMIN required)
                 .requestMatchers(HttpMethod.POST, "/inventory/parts").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/inventory/parts/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/inventory/parts/**").hasRole("ADMIN")
@@ -97,17 +87,10 @@ public class SecurityConfig {
                 .requestMatchers("/suppliers/**").hasRole("ADMIN")
                 .requestMatchers("/reports/**").hasRole("ADMIN")
 
-                // Logout endpoint (authenticated)
                 .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
 
-                // All other requests require authentication
                 .anyRequest().authenticated()
-            )
 
-            // Exception handling
-            .exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
             );
 
         // Add JWT token filter
@@ -123,9 +106,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://posis.com"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true); // Allow cookies
+        configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
         configuration.setMaxAge(3600L);
 
@@ -137,12 +120,19 @@ public class SecurityConfig {
     /**
      * Configure AuthenticationManager for authentication processing.
      */
+//    @Bean
+//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+//        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+//        authBuilder
+//            .userDetailsService(userDetailsService)
+//            .passwordEncoder(passwordEncoder);
+//        return authBuilder.build();
+//    }
+
+
+
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder);
-        return authBuilder.build();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

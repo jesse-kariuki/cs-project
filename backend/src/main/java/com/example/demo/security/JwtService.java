@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.config.JwtProperties;
 import com.example.demo.exception.TokenExpiredException;
 
 import io.jsonwebtoken.Claims;
@@ -28,6 +27,16 @@ import io.jsonwebtoken.security.SecurityException;
 /**
  * JWT Service for token generation, validation, and claims extraction.
  * Uses JJWT library for cryptographic operations.
+ *
+ * Token Structure:
+ * {
+ *   "sub": "userId",
+ *   "username": "username",
+ *   "roles": ["ROLE_CASHIER"],
+ *   "iss": "posis-garage-system",
+ *   "iat": timestamp,
+ *   "exp": timestamp
+ * }
  */
 @Service
 public class JwtService {
@@ -41,33 +50,33 @@ public class JwtService {
         this.jwtProperties = jwtProperties;
         // Initialize secret key from properties
         this.secretKey = Keys.hmacShaKeyFor(
-            jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8)
+                jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8)
         );
     }
 
     /**
-     * Generate access token from authentication object.
-     * Claims: sub (userId), username, roles, iat, exp, iss
+     * Generate access token for authenticated user.
+     * Subject contains userId for later extraction.
      */
     public String generateAccessToken(Authentication authentication) {
         String userId = extractUserIdFromAuthentication(authentication);
         String username = authentication.getName();
         List<String> roles = authentication.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getAccessTokenExpirationMs());
 
         return Jwts.builder()
-            .subject(userId) // Subject: user ID
-            .claim("username", username)
-            .claim("roles", roles)
-            .issuer(jwtProperties.getIssuer())
-            .issuedAt(now)
-            .expiration(expiryDate)
-            .signWith(secretKey, SignatureAlgorithm.HS512)
-            .compact();
+                .subject(userId)  // Store user ID in subject
+                .claim("username", username)
+                .claim("roles", roles)
+                .issuer(jwtProperties.getIssuer())
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(secretKey, SignatureAlgorithm.HS512)
+                .compact();
     }
 
     /**
@@ -81,12 +90,12 @@ public class JwtService {
         Date expiryDate = new Date(now.getTime() + jwtProperties.getRefreshTokenExpirationMs());
 
         return Jwts.builder()
-            .subject(userId)
-            .issuer(jwtProperties.getIssuer())
-            .issuedAt(now)
-            .expiration(expiryDate)
-            .signWith(secretKey, SignatureAlgorithm.HS512)
-            .compact();
+                .subject(userId)  // Store user ID in subject
+                .issuer(jwtProperties.getIssuer())
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(secretKey, SignatureAlgorithm.HS512)
+                .compact();
     }
 
     /**
@@ -96,9 +105,9 @@ public class JwtService {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token);
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token);
             return true;
         } catch (SecurityException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
@@ -121,17 +130,18 @@ public class JwtService {
     public Claims extractClaims(String token) {
         try {
             return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
         } catch (ExpiredJwtException e) {
             throw new TokenExpiredException("Token has expired");
         }
     }
 
     /**
-     * Extract user ID from token.
+     * Extract user ID from token (stored in subject).
+     * Use this method when loading user from database.
      */
     public String extractUserId(String token) {
         return extractClaims(token).getSubject();

@@ -18,7 +18,16 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * JWT Token Filter that intercepts every request and validates JWT token.
- * Extracts token from Authorization header, validates it, and sets authentication in context.
+ *
+ * Flow:
+ * 1. Extract token from Authorization header (Bearer <token>)
+ * 2. Validate token signature and expiration
+ * 3. Extract userId from token subject
+ * 4. Load user details from database
+ * 5. Create authentication object with user details
+ * 6. Set authentication in SecurityContext
+ *
+ * Note: This is the ONLY JWT filter. JwtValidator should be deleted.
  */
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -36,12 +45,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     /**
      * Filter logic executed for each request.
-     * 1. Extract token from Authorization header
-     * 2. Validate token
-     * 3. Extract claims (userId, roles)
-     * 4. Load user details from database
-     * 5. Create authentication object
-     * 6. Set in SecurityContext
      */
     @Override
     protected void doFilterInternal(
@@ -51,32 +54,42 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String token = extractTokenFromRequest(request);
 
-        if (StringUtils.hasText(token) && jwtService.validateToken(token)) {
+        if (StringUtils.hasText(token)) {
             try {
-                // Extract user ID from token
+                // Validate token (throws TokenExpiredException if expired)
+                if (!jwtService.validateToken(token)) {
+                    logger.warn("Invalid JWT token");
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
+                // Extract user ID from token subject
                 String userId = jwtService.extractUserId(token);
+                String username = jwtService.extractUsername(token);
+                logger.debug("Extracted userId from token: {}", userId);
 
                 // Load user details from database
-                UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserById(userId);
+                UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
+                logger.debug("Loaded user details for userId: {}", userId);
 
-                // Create authentication object
+                // Create authentication object with loaded authorities
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
                 );
 
                 // Set authentication in security context
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                logger.debug("JWT token validated for user: {}", userId);
+                logger.debug("JWT token validated and authentication set for user: {}", userId);
+
             } catch (Exception e) {
-                logger.error("Cannot set user authentication: {}", e.getMessage());
+                logger.error("Cannot set user authentication: {} - {}", e.getClass().getSimpleName(), e.getMessage());
                 SecurityContextHolder.clearContext();
             }
-        } else if (token != null) {
-            logger.warn("Invalid or expired JWT token");
-            SecurityContextHolder.clearContext();
+        } else {
+            logger.debug("No JWT token found in request");
         }
 
         filterChain.doFilter(request, response);
@@ -85,14 +98,52 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     /**
      * Extract JWT token from Authorization header.
      * Expected format: "Bearer <token>"
+     *
+     * @return token without Bearer prefix, or null if not present
      */
     private String extractTokenFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
         if (StringUtils.hasText(authHeader) && authHeader.startsWith(BEARER_PREFIX)) {
-            return authHeader.substring(BEARER_PREFIX.length());
+            String token = authHeader.substring(BEARER_PREFIX.length());
+            logger.debug("Extracted token from Authorization header");
+            return token;
         }
 
         return null;
+    }
+
+    /**
+     * Determines if this filter should be skipped for the request.
+     * Skip public endpoints that don't require authentication.
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+        String method = request.getMethod();
+
+        // Skip CORS preflight requests
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            logger.debug("Skipping JWT filter for CORS preflight request");
+            return true;
+        }
+
+        // Skip public auth endpoints - must match SecurityConfig paths
+        if (path.startsWith("/auth/")) {
+            logger.debug("Skipping JWT filter for public auth endpoint: {}", path);
+            return true;
+        }
+
+        // Skip health checks
+        if (path.startsWith("/health")) {
+            return true;
+        }
+
+        // Skip Swagger/OpenAPI docs
+        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+            return true;
+        }
+
+        return false;
     }
 }
