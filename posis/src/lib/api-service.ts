@@ -79,7 +79,7 @@ export const authAPI = {
   },
 
 
-  signup: async (username: string, password: string, role: string) => {
+  createUser: async (username: string, password: string, role: string) => {
     const response = await fetch(`${API_BASE_URL}/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
