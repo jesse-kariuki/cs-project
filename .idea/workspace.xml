@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="63dc2396-83f0-447d-a14e-5309cafffaa7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/pos/UI/pos/app/cashier/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pos/UI/pos/app/cashier/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/UI/pos/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pos/UI/pos/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/UI/pos/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pos/UI/pos/app/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pos/UI/pos/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pos/UI/pos/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/posis/app/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/posis/app/globals.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/posis/app/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/posis/app/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/posis/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/posis/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/posis/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/posis/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/posis/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/posis/package.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/backend" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;jesse-kariuki&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/happy-wondessen/CS-Project1.git&quot;,
+    &quot;accountId&quot;: &quot;294e7029-df80-41e4-aee0-cf64e21ab081&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.7046838857218473E-11" />
+      <entry key="MS500" value="0.010643563537885852" />
+      <entry key="S2" value="0.5358592490728578" />
+      <entry key="S5" value="1.5903891083378843" />
+      <entry key="S10" value="5.3928721230603465" />
+      <entry key="S30" value="19.70521975828824" />
+      <entry key="S60" value="28.28525873437016" />
+      <entry key="M2" value="34.01699271957505" />
+      <entry key="M5" value="38.04001483972247" />
+      <entry key="M10" value="39.49069339988704" />
+      <entry key="M15" value="39.987163954752944" />
+      <entry key="M30" value="40.49023629555594" />
+      <entry key="H1" value="40.744277605439706" />
+      <entry key="H2" value="40.874212445016916" />
+      <entry key="H4" value="41.06514413381865" />
+      <entry key="D1" value="75.06014088054943" />
+      <entry key="W1" value="399.4001898810835" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0000000000000002" />
+      <entry key="S2" value="1.000133905236475" />
+      <entry key="S5" value="1.0282305295220469" />
+      <entry key="S10" value="1.1680194319775152" />
+      <entry key="S30" value="1.551806108802288" />
+      <entry key="S60" value="1.7428365289902539" />
+      <entry key="M2" value="1.8618796487852896" />
+      <entry key="M5" value="1.942277129819398" />
+      <entry key="M10" value="1.9707096011781269" />
+      <entry key="M15" value="1.980376479612507" />
+      <entry key="M30" value="1.9901396263260196" />
+      <entry key="H1" value="1.9950654055126695" />
+      <entry key="H2" value="2.0084138038071115" />
+      <entry key="H4" value="2.442963052262277" />
+      <entry key="D1" value="32.66725706163543" />
+      <entry key="W1" value="271.99501139392373" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="3.3025105349614493E-7" />
+      <entry key="MS500" value="0.06043769067514414" />
+      <entry key="S2" value="0.9973970327060153" />
+      <entry key="S5" value="2.3426980376371302" />
+      <entry key="S10" value="6.393196693420388" />
+      <entry key="S30" value="21.178037500692106" />
+      <entry key="S60" value="29.982563681971406" />
+      <entry key="M2" value="35.85416374738092" />
+      <entry key="M5" value="39.97187309129244" />
+      <entry key="M10" value="41.45609787852001" />
+      <entry key="M15" value="41.96398191894891" />
+      <entry key="M30" value="42.478585651946304" />
+      <entry key="H1" value="42.73844509503092" />
+      <entry key="H2" value="42.88217408622292" />
+      <entry key="H4" value="43.50782909823411" />
+      <entry key="D1" value="107.72639699532915" />
+      <entry key="W1" value="671.3940245911668" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="3F84CrJj1wHPYHvD5jvXszRoalW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.demo [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.demo [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.demo [package].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.PosisApplication (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.PosisApplication .executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.PosisApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;auth&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kariu/CS-Project1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.annotationProcessors&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\kariu\\CS-Project1\\posis\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mariadb&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="PosisApplication " type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="demo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.PosisApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="63dc2396-83f0-447d-a14e-5309cafffaa7" name="Changes" comment="" />
+      <created>1781443237651</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1781443237651</updated>
+      <workItem from="1781443238794" duration="21565000" />
+      <workItem from="1781611433900" duration="123000" />
+      <workItem from="1781634138704" duration="29391000" />
+      <workItem from="1781786709559" duration="12477000" />
+      <workItem from="1782105080502" duration="2481000" />
+      <workItem from="1782278305730" duration="2000" />
+      <workItem from="1782278553716" duration="49592000" />
+      <workItem from="1782698942807" duration="7616000" />
+      <workItem from="1782722201715" duration="8174000" />
+      <workItem from="1782889301300" duration="18828000" />
+      <workItem from="1783162033814" duration="8037000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/backend/src/main/java/com/example/demo/repositories/SaleRepository.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
