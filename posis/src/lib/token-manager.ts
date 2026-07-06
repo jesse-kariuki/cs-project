@@ -143,6 +143,7 @@ export const getAuthHeaders = (): HeadersInit => {
     console.warn('⚠ No access token available');
     return {
       'Content-Type': 'application/json',
+      "ngrok-skip-browser-warning": "true"
     };
   }
 
