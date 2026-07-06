@@ -880,7 +880,7 @@ export default function AdminPage() {
             </nav>
           </div>
 
-          <div className={`p-4 border-t >
+          <div className={`p-4 border-t `}>
                       
                       <div
 className={`flex items-center space-x-3 mb-4 px-4 py-3 rounded-xl ${isDarkMode ? "bg-gray-800" : "bg-gray-50"}`}                      >
