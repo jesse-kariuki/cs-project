@@ -883,8 +883,7 @@ export default function AdminPage() {
           <div className={`p-4 border-t >
                       
                       <div
-                        className={`flex items-center space-x-3 mb-4 px-4 py-3 ${isDarkMode ? "bg-gray-800" : "bg-gray-50"} rounded-xl`}
-                      >
+className={`flex items-center space-x-3 mb-4 px-4 py-3 rounded-xl ${isDarkMode ? "bg-gray-800" : "bg-gray-50"}`}                      >
                         <FaUserCircle
                           className={`text-2xl md:text-3xl ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}
                         />
